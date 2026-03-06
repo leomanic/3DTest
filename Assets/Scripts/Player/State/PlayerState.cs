@@ -5,11 +5,11 @@ public class PlayerState : MonoBehaviour
 {
     protected Animator _animator;
 
-    protected UnityEngine.InputSystem.PlayerInput _playerInput;
+    protected PlayerInput _playerInput;
 
     protected PlayerController _playerController;
     
-    public PlayerState(PlayerController playerController, Animator animator, UnityEngine.InputSystem.PlayerInput playerInput)
+    public PlayerState(PlayerController playerController, Animator animator, PlayerInput playerInput)
     {
         _playerController = playerController;        
         _animator = animator;

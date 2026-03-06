@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform headTransform;
     private Animator _animator;
-    private UnityEngine.InputSystem.PlayerInput _playerInput;
+    private PlayerInput _playerInput;
     private CharacterController _characterController;
 
     // 애니메이션 키
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _playerInput = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        _playerInput = GetComponent<PlayerInput>();
         _characterController = GetComponent<CharacterController>();
 
         // 상태 객체 초기화
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
         var playerCamera = Camera.main;
         if (playerCamera != null)
         {
-            playerCamera.GetComponent<CameraController>().SetTarget(gameObject.transform, _playerInput);
+            playerCamera.GetComponent<CameraController>().SetTarget(headTransform, _playerInput);
         }
     }
 

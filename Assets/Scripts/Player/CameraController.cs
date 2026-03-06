@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
             // 마우스 x,y 값을 이용해 카메라 이동
             _azimuthAngle += _lookVector.x * rotationSpeed * Time.deltaTime;
             _polarAngle -= _lookVector.y * rotationSpeed * Time.deltaTime;
-            _polarAngle = Mathf.Clamp(_polarAngle, -20f, -60f);     // 범위 제한
+            _polarAngle = Mathf.Clamp(_polarAngle, -20f, 60f);     // 범위 제한
 
             // 벽이 있을 경우 Distance 수정
             var adjustCameraDistance = AdjustCameraDistance();
@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
             // 카메라 위치 설정
             var cartesianPosition = GetCameraPosition(adjustCameraDistance, _polarAngle, _azimuthAngle);
 
-            transform.position = _target.position -cartesianPosition; //-= new Vector3(0, -1, -3);
+            transform.position = _target.position - cartesianPosition; //-= new Vector3(0, -1, -3);
             transform.LookAt(_target);
         }       
     }
@@ -43,14 +43,14 @@ public class CameraController : MonoBehaviour
     private Vector3 GetCameraPosition(float r, float polarAngle, float azimuthAngle)
     {
         float b = r * Mathf.Cos(polarAngle * Mathf.Deg2Rad);
-        float x = r * Mathf.Sin(azimuthAngle * Mathf.Deg2Rad);
+        float x = b * Mathf.Sin(azimuthAngle * Mathf.Deg2Rad);
         float y = r * Mathf.Sin(polarAngle * Mathf.Deg2Rad) * -1;
-        float z = r * Mathf.Cos(azimuthAngle * Mathf.Deg2Rad);
+        float z = b * Mathf.Cos(azimuthAngle * Mathf.Deg2Rad);
 
         return new Vector3(x, y, z);
     }
 
-    public void SetTarget(Transform target, UnityEngine.InputSystem.PlayerInput playerInput)
+    public void SetTarget(Transform target, PlayerInput playerInput)
     {
         _target = target;
 

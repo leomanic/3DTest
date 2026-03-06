@@ -5,7 +5,7 @@ public class MovePlayerState : PlayerState, IPlayerState
 {
     private float _moveSpeed;
 
-    public MovePlayerState(PlayerController playerController, Animator animator, UnityEngine.InputSystem.PlayerInput playerInput) : base(playerController, animator, playerInput)
+    public MovePlayerState(PlayerController playerController, Animator animator, PlayerInput playerInput) : base(playerController, animator, playerInput)
     // :base (playerController, animator, playerInput)
     {
     }
