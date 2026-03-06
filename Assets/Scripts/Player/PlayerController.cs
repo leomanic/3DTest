@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
         var playerCamera = Camera.main;
         if (playerCamera != null)
         {
+            _playerInput.camera = playerCamera;     // 플레이어 방향 전환 가능
             playerCamera.GetComponent<CameraController>().SetTarget(headTransform, _playerInput);
         }
     }
