@@ -1,0 +1,42 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerState : MonoBehaviour
+{
+    protected Animator _animator;
+
+    protected UnityEngine.InputSystem.PlayerInput _playerInput;
+
+    protected PlayerController _playerController;
+    
+    public PlayerState(PlayerController playerController, Animator animator, UnityEngine.InputSystem.PlayerInput playerInput)
+    {
+        _playerController = playerController;        
+        _animator = animator;
+        _playerInput = playerInput;
+    }
+
+    // 카메라 할당.
+
+    // 캐릭터 회전
+    protected void Rotate(float x, float z)
+    {
+        if (_playerInput.camera != null)
+        {
+            var cameraTransform = _playerInput.camera.transform;
+            var cameraForward = cameraTransform.forward;
+            var cameraRight = cameraTransform.right;
+            
+            cameraForward.y = 0;
+            cameraRight.y = 0;
+
+            var moveDirection = cameraForward * z + cameraRight * x;
+
+            if (moveDirection != Vector3.zero)
+            {
+                moveDirection.Normalize();
+                _playerController.transform.rotation = Quaternion.LookRotation(moveDirection);
+            }
+        }
+    }
+}

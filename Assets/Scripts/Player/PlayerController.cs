@@ -1,0 +1,73 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(CharacterController))]
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] private Transform headTransform;
+    private Animator _animator;
+    private UnityEngine.InputSystem.PlayerInput _playerInput;
+    private CharacterController _characterController;
+
+    // 애니메이션 키
+    public static readonly int PlayerAniParamMove = Animator.StringToHash("move");
+    public static readonly int PlayerAniParamMoveSpeed = Animator.StringToHash("move_speed");
+
+    public enum EPlayerState
+    {
+        None, Idle, Move
+    }
+
+    // 현재 상태에 대한 정보
+    public EPlayerState PlayerState { get; private set; }
+
+    // 상태와 상태 객체를 담고 있는 Dictonary
+    private Dictionary<EPlayerState, IPlayerState> _playerStates;
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+        _playerInput = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        _characterController = GetComponent<CharacterController>();
+
+        // 상태 객체 초기화
+        var IdlePlayerState = new IdlePlayerState(this, _animator, _playerInput);
+        var movePlayerState = new MovePlayerState(this, _animator, _playerInput);
+
+        _playerStates = new Dictionary<EPlayerState, IPlayerState>
+        {
+            { EPlayerState.Idle, IdlePlayerState },
+            { EPlayerState.Move, movePlayerState }
+        };
+
+        // 카메라 할당
+        var playerCamera = Camera.main;
+        if (playerCamera != null)
+        {
+            playerCamera.GetComponent<CameraController>().SetTarget(gameObject.transform, _playerInput);
+        }
+    }
+
+    void Start()
+    {
+        PlayerState = EPlayerState.None;        
+    }
+
+    void Update()
+    {
+        if (PlayerState != EPlayerState.None) _playerStates[PlayerState].Update();
+    }
+
+    // 새로운 상태를 할당하는 함수
+    public void SetState(EPlayerState state)
+    {
+        if (PlayerState == state) return;
+        if (PlayerState != EPlayerState.None) _playerStates[PlayerState].Exit();
+        PlayerState = state;
+        if (PlayerState != EPlayerState.None) _playerStates[PlayerState].Enter();
+    }
+}
